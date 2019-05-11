@@ -19,16 +19,18 @@ public class TicTacNo {
 
 
         try {
+            // open connection to server
             s1 = new Socket("www.dagertech.net", 3800);
             addr = s1.getInetAddress();
             System.out.println("Connecting to " + addr + ":3800");
-
-            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(s1.getInputStream(), "UTF-8"));
+            // instantiate reader to read server output
+            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(s1.getInputStream()));
             /*
             PrintStream pw1 = new PrintStream(s1.getOutputStream(), true);
             DataOutputStream outToServer = new DataOutputStream(s1.getOutputStream());
             */
 
+            // instantiate writer to write to server
             OutputStream os = s1.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
             BufferedWriter pw1 = new BufferedWriter(osw);
