@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c60cc340-7eb1-4b3b-90c8-8d944c05c5f0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TicTacNo/TicTacNo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TicTacNo/TicTacNo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/TicTacNo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TicTacNo.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -18,12 +17,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/TicTacNo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="38" column="42" lean-forward="true" selection-start-line="38" selection-start-column="42" selection-end-line="38" selection-end-column="42" />
+            <state relative-caret-position="391">
+              <caret line="41" column="24" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5910#5911#0" expanded="true" />
-                <element signature="e#5934#5935#0" expanded="true" />
+                <element signature="e#6478#6479#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -48,9 +46,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="765" />
-    <option name="y" value="121" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="922" />
+    <option name="y" value="-13" />
     <option name="width" value="974" />
     <option name="height" value="1161" />
   </component>
@@ -78,7 +76,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557555928175" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557556754219" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -114,7 +112,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1557547620231</updated>
-      <workItem from="1557547621611" duration="7355000" />
+      <workItem from="1557547621611" duration="8119000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1557548214632</created>
@@ -130,14 +128,21 @@
       <option name="project" value="LOCAL" />
       <updated>1557552727733</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Initial commit">
+      <created>1557555935598</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1557555935598</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7355000" />
+    <option name="totallyTimeSpent" value="8119000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="765" y="121" width="974" height="1161" extended-state="0" />
+    <frame x="742" y="108" width="974" height="1161" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Image Layers" />
@@ -181,12 +186,11 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/TicTacNo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="38" column="42" lean-forward="true" selection-start-line="38" selection-start-column="42" selection-end-line="38" selection-end-column="42" />
+        <state relative-caret-position="391">
+          <caret line="41" column="24" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5910#5911#0" expanded="true" />
-            <element signature="e#5934#5935#0" expanded="true" />
+            <element signature="e#6478#6479#0" expanded="true" />
           </folding>
         </state>
       </provider>

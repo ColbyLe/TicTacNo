@@ -7,7 +7,7 @@ public class TicTacNo {
     static char[][] board;
     static Socket s1;
     static InetAddress addr;
-    static int maxDepth = 9;
+    static int maxDepth = 9, currMove = 0;
     public static void main(String[] args) throws IOException {
         // instantiate and populate board matrix
         board = new char[3][3];
@@ -24,19 +24,28 @@ public class TicTacNo {
             System.out.println("Connecting to " + addr + ":3800");
 
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(s1.getInputStream(), "UTF-8"));
-            PrintWriter pw1 = new PrintWriter(s1.getOutputStream(), true);
+            /*
+            PrintStream pw1 = new PrintStream(s1.getOutputStream(), true);
             DataOutputStream outToServer = new DataOutputStream(s1.getOutputStream());
+            */
+
+            OutputStream os = s1.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter pw1 = new BufferedWriter(osw);
+
             String serverOut;
 
             System.out.print("AI-COM/OTTO\nvs\n");
             while((serverOut = inFromServer.readLine()) != null) {
                 System.out.println(serverOut + "\n");
             }
-
-            outToServer.writeUTF("X\n");
-            //pw1.write("X\n");
-            serverOut = inFromServer.readLine();
-            System.out.println(serverOut);
+            pw1.flush();
+            //outToServer.writeUTF("X\n");
+            pw1.write("X\n");
+            pw1.flush();
+            while((serverOut = inFromServer.readLine()) != null) {
+                System.out.println(serverOut + "\n");
+            }
 
             do {
                 // get client move
@@ -45,8 +54,8 @@ public class TicTacNo {
                 System.out.println("Client Move: ");
                 printBoard();
 
-                // pass move to server as 9Board
-                outToServer.writeUTF(matrixToNBoard());
+                // pass move to server
+                pw1.write(currMove);
                 serverOut = inFromServer.readLine();
                 if(serverOut.length() == 9) {
                     NBoardToMatrix(serverOut);
@@ -62,6 +71,8 @@ public class TicTacNo {
 
             } while(!serverOut.contains("Wins!"));
             s1.close();
+            // print win message
+            System.out.println(serverOut);
         }
 
         catch (Exception e) {
@@ -69,6 +80,7 @@ public class TicTacNo {
         }
     }
 
+    /*
     static String matrixToNBoard() {
         // instantiate StringBuilder sb
         StringBuilder sb = new StringBuilder();
@@ -99,6 +111,7 @@ public class TicTacNo {
         // return string
         return sb.toString();
     }
+    */
 
     static void NBoardToMatrix(String NBoard) {
         // iterate through 9Board
@@ -188,6 +201,7 @@ public class TicTacNo {
     }
 
     static void makeMove() {
+        // get next move
         int best = -20000,
                 depth = maxDepth,
                 score, mi=0, mj=0;
@@ -207,7 +221,23 @@ public class TicTacNo {
                 }
             }
         }
-        board[mi][mj] = 'x';
+        board[mi][mj] = 'X';
+
+        // convert board position to integer
+        int wr = 0;
+        switch(mi) {
+            case 0:
+                wr = mi+mj+1;
+                break;
+            case 1:
+                wr = mi+mj+3;
+                break;
+            case 2:
+                wr = mi+mj+5;
+                break;
+        }
+        // set current move position
+        currMove = wr;
     }
 
     static int min(int depth) {
