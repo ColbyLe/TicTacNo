@@ -5,9 +5,6 @@ import java.net.Socket;
 
 public class TicTacNo {
     static char[][] board;
-    static Socket s1;
-    static InetAddress addr;
-    static int maxDepth = 9, currMove = 0;
     public static void main(String[] args) throws IOException {
         // instantiate and populate board matrix
         board = new char[3][3];
@@ -16,104 +13,69 @@ public class TicTacNo {
                 board[i][j] = '-';
             }
         }
-
-
         try {
-            // open connection to server
-            s1 = new Socket("www.dagertech.net", 3800);
-            addr = s1.getInetAddress();
+            // instantiate network object stuff
+            Socket s1 = new Socket("www.dagertech.net", 3800);
+            InetAddress addr = s1.getInetAddress();
+
             System.out.println("Connecting to " + addr + ":3800");
-            // instantiate reader to read server output
-            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(s1.getInputStream()));
-            /*
-            PrintStream pw1 = new PrintStream(s1.getOutputStream(), true);
-            DataOutputStream outToServer = new DataOutputStream(s1.getOutputStream());
-            */
 
-            // instantiate writer to write to server
-            OutputStream os = s1.getOutputStream();
-            OutputStreamWriter osw = new OutputStreamWriter(os);
-            BufferedWriter pw1 = new BufferedWriter(osw);
+            System.out.println("\nThis program will always pick the first available space.");
+            System.out.println("It's designed to lose.\n");
 
+            InputStreamReader isr = new InputStreamReader(s1.getInputStream());
+            BufferedReader br = new BufferedReader(isr);
+
+            PrintWriter pw1 = new PrintWriter(s1.getOutputStream(), true);
+
+            // choose X
+            pw1.println("X\n");
+            System.out.println(br.readLine());
             String serverOut;
+            String nBoard;
+            char move;
 
-            System.out.print("AI-COM/OTTO\nvs\n");
-            while((serverOut = inFromServer.readLine()) != null) {
-                System.out.println(serverOut + "\n");
-            }
-            pw1.flush();
-            //outToServer.writeUTF("X\n");
-            pw1.write("X\n");
-            pw1.flush();
-            while((serverOut = inFromServer.readLine()) != null) {
-                System.out.println(serverOut + "\n");
-            }
+            System.out.println(br.readLine());
 
-            do {
-                // get client move
-                makeMove();
-                // print current state of board
-                System.out.println("Client Move: ");
-                printBoard();
-
-                // pass move to server
-                pw1.write(currMove);
-                serverOut = inFromServer.readLine();
+            // continue while server sends non-null values
+            while((serverOut = br.readLine()) != null) {
+                // if length of output is 9, check if win message
                 if(serverOut.length() == 9) {
-                    NBoardToMatrix(serverOut);
-                    System.out.println("Server Move: ");
-                    printBoard();
-                }
-                else {
-                    while((serverOut) != null) {
+                    // if win message, print message and break loop
+                    if(serverOut.charAt(serverOut.length()-1) == '!') {
                         System.out.println(serverOut);
+                        break;
+                    }
+
+                    // if not win message, convert board to matrix and print
+                    nBoard = serverOut;
+                    NBoardToMatrix(nBoard);
+                    printBoard();
+
+                    // iterate through board and select first available position as move
+                    for(int i=0; i<nBoard.length(); i++) {
+                        if((nBoard.charAt(i) != 'X')&&(nBoard.charAt(i) != 'O')) {
+                            move = nBoard.charAt(i);
+                            // send move to server
+                            pw1.println(move + "\n");
+                            break;
+                        }
                     }
                 }
-                //pw1.println("version\n");
 
-            } while(!serverOut.contains("Wins!"));
+                // if length of output is greater than 9, print output
+                else {
+                    System.out.println(serverOut);
+                }
+            }
+            // close socket
             s1.close();
-            // print win message
-            System.out.println(serverOut);
         }
 
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-
-    /*
-    static String matrixToNBoard() {
-        // instantiate StringBuilder sb
-        StringBuilder sb = new StringBuilder();
-        // iterate through matrix
-        for(int i=0; i<3; i++) {
-            for(int j=0; j<3; j++) {
-                // if an 'X' or 'O' is encountered, write to sb
-                if(board[i][j] == 'X') sb.append('X');
-                else if(board[i][j] == 'O') sb.append('O');
-                // if any other value is encountered, convert matrix indices to integer value and write value to sb
-                else {
-                    int wr=0;
-                    switch(i) {
-                        case 0:
-                            wr = i+j+1;
-                            break;
-                        case 1:
-                            wr = i+j+3;
-                            break;
-                        case 2:
-                            wr = i+j+5;
-                            break;
-                    }
-                    sb.append(wr);
-                }
-            }
-        }
-        // return string
-        return sb.toString();
-    }
-    */
 
     static void NBoardToMatrix(String NBoard) {
         // iterate through 9Board
@@ -189,132 +151,14 @@ public class TicTacNo {
 
 
     static void printBoard() {
+        // iterate through matrix and print value at current position
         for(int i=0; i<board.length; i++) {
             for(int j=0; j<board[i].length; j++) {
-                if(board[i][j] == '-') System.out.print("  ");
+                if(board[i][j] == '-') System.out.print("- ");
                 else System.out.print(board[i][j] + " ");
             }
             System.out.println();
         }
-    }
-
-    static int evaluate() {
-        return 0;
-    }
-
-    static void makeMove() {
-        // get next move
-        int best = -20000,
-                depth = maxDepth,
-                score, mi=0, mj=0;
-        for(int i=0; i<3;i++) {
-            for(int j=0; j<3; j++) {
-                if(board[i][j]=='-') {
-                    // make move
-                    board[i][j] = 'X';
-                    score = min(depth-1);
-                    if(score>best) {
-                        mi = i;
-                        mj = j;
-                        best = score;
-                    }
-                    // undo move
-                    board[i][j] = '-';
-                }
-            }
-        }
-        board[mi][mj] = 'X';
-
-        // convert board position to integer
-        int wr = 0;
-        switch(mi) {
-            case 0:
-                wr = mi+mj+1;
-                break;
-            case 1:
-                wr = mi+mj+3;
-                break;
-            case 2:
-                wr = mi+mj+5;
-                break;
-        }
-        // set current move position
-        currMove = wr;
-    }
-
-    static int min(int depth) {
-        int best = 20000, score;
-        if(checkWin() != 0) return checkWin();
-        if(depth == 0) return evaluate();
-        for(int i=0; i<3; i++) {
-            for(int j=0; j<3; j++) {
-                if(board[i][j] == '-') {
-                    // make move
-                    board[i][j] = 'O';
-                    score = max(depth-1);
-                    if(score<best) best = score;
-                    // undo move
-                    board[i][j] = '-';
-                }
-            }
-        }
-        return best;
-    }
-
-    static int max(int depth) {
-        int best = -20000, score;
-        if(checkWin() != 0) return checkWin();
-        if(depth == 0) return evaluate();
-        for(int i=0; i<3; i++) {
-            for(int j=0; j<3; j++) {
-                if(board[i][j] == 0) {
-                    //make move
-                    board[i][j] = 'X';
-                    score = min(depth-1);
-                    if(score>best) best = score;
-                    board[i][j] = '-';
-                }
-            }
-        }
-        return best;
-    }
-
-    static int checkWin() {
-        // client wins
-        if ((board[0][0]==1)&&(board[0][1]==1)&&(board[0][2]==1)
-                || (board[1][0]=='X')&&(board[1][1]=='X')&&(board[1][2]=='X')
-                || (board[2][0]=='X')&&(board[2][1]=='X')&&(board[2][2]=='X')
-                || (board[0][0]=='X')&&(board[1][0]=='X')&&(board[2][0]=='X')
-                || (board[0][1]=='X')&&(board[1][1]=='X')&&(board[2][1]=='X')
-                || (board[0][2]=='X')&&(board[1][2]=='X')&&(board[2][2]=='X')
-                || (board[0][0]=='X')&&(board[1][1]=='X')&&(board[2][2]=='X')
-                || (board[0][2]=='X')&&(board[1][1]=='X')&&(board[2][0]=='X')) {
-            return 5000;
-        }
-        // server wins
-        if ((board[0][0]=='O')&&(board[0][1]=='O')&&(board[0][2]=='O')
-                || (board[1][0]=='O')&&(board[1][1]=='O')&&(board[1][2]=='O')
-                || (board[2][0]=='O')&&(board[2][1]=='O')&&(board[2][2]=='O')
-                || (board[0][0]=='O')&&(board[1][0]=='O')&&(board[2][0]=='O')
-                || (board[0][1]=='O')&&(board[1][1]=='O')&&(board[2][1]=='O')
-                || (board[0][2]=='O')&&(board[1][2]=='O')&&(board[2][2]=='O')
-                || (board[0][0]=='O')&&(board[1][1]=='O')&&(board[2][2]=='O')
-                || (board[0][2]=='O')&&(board[1][1]=='O')&&(board[2][0]=='O')) {
-            return -5000;
-        }
-        for (int i=0; i<3; i++)
-            for (int j=0; j<3; j++) {
-                if (board[i][j]=='-') return 0;
-            }
-        // draw
-        return 1;
-    }
-
-    static int checkGameOver() {
-        printBoard();
-        if(checkWin() == 5000) System.out.println("Client wins");
-        if(checkWin() == -5000) System.out.println("Server wins");
-        if(checkWin() == 1) System.out.println("Draw");
-        return 0;
+        System.out.println();
     }
 }
